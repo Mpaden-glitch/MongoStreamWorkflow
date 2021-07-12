@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<AlteryxDocument yxmdVer="2021.2">
+  <Nodes>
+    <Node ToolID="2">
+      <GuiSettings Plugin="JupyterCode">
+        <Position x="570" y="186" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <WorkflowName>c:\users\matthew.paden\onedrive - alteryx.com\documents\cases\python_sme\workaround.yxmd</WorkflowName>
+          <JupyterProduction>false</JupyterProduction>
+          <vEnvName>designerbasetools_venv</vEnvName>
+          <DefaultVenv>1</DefaultVenv>
+          <productionModeScript />
+          <Port>55659</Port>
+          <JupyterGuidDir>22fe4a9d7b737d53ab1718099cb7e4f7</JupyterGuidDir>
+          <JupyterGuidCopy />
+          <LastExecutedByEngineVersion>2021.2.1.35394</LastExecutedByEngineVersion>
+          <Notebook><![CDATA[{"cells":[{"cell_type":"markdown","metadata":{"ayx":{"cell_class":"text_cell","cell_css":"border: 3px solid #357; margin: 4px; background: #fbffff","cell_type":"markdown","contents_keyword":"Alteryx.help()","first_line":"Run `Alteryx.help()` for info about useful functions.","label":"info"}},"source":["Run `Alteryx.help()` for info about useful functions.  \n","i.e., `Alteryx.read(\"#1\")`, `Alteryx.write(df,1)`, `Alteryx.getWorkflowConstant(\"Engine.WorkflowDirectory\")`"]},{"cell_type":"code","execution_count":1,"metadata":{"ayx":{"cell_class":"code_cell","cell_css":"border: 1px solid #58a; margin: 2px;","cell_type":"code","contents_keyword":"installPackages","first_line":"# List all non-standard packages to be imported by your","label":"deps"}},"outputs":[],"source":["# List all non-standard packages to be imported by your \n","# script here (only missing packages will be installed)\n","from ayx import Package\n","#Package.installPackages(['pandas','numpy'])"]},{"cell_type":"code","execution_count":2,"metadata":{},"outputs":[],"source":["from ayx import Alteryx\n","from pymongo import MongoClient\n","from bson.objectid import ObjectId\n","import pandas as pd\n","import numpy as np\n","from openpyxl import Workbook\n","from openpyxl import load_workbook\n","from openpyxl import styles\n","from io import BytesIO\n","\n","\n","uri = \"URI FROM MONGODB\"\n","client = MongoClient(uri)\n","oid = '60d602a8cc3500000c000b71'\n","db = client.AlteryxService\n","col = db.AS_QueueInputs\n","results = list(col.find({\"_id\": ObjectId(oid)}))\n","data = results[0]['__ServiceData']\n","\n","\n","wb = load_workbook(filename=BytesIO(data))"]},{"cell_type":"code","execution_count":3,"metadata":{},"outputs":[],"source":["\n","\n","ws = wb.active\n","\n","#Get row and column count\n","row_count = ws.max_row\n","col_count = ws.max_column\n","\n","#Create the array to store the cell color\n","result_array = np.full((row_count,col_count),'', dtype=object)\n","\n","#Initialize some variables\n","i=0\n","j=0\n","\n","#Iterate through worksheet and print cell contents in hex\n","#If needed convert it to RGB inside python or into Alteryx with a formula\n","for row in ws.iter_rows():\n","    for cell in row:\n","        result_array[i,j]=cell.fill.start_color.index\n","        j+=1\n","        if(j==col_count):j=0\n","    i+=1 \n","    \n","#Create the result dataframe to pass to Alteryx        \n","df = pd.DataFrame(result_array)\n","\n","#Send the dataframe   \n","Alteryx.write(df,1)"]},{"cell_type":"code","execution_count":null,"metadata":{},"outputs":[],"source":[]}],"metadata":{"kernelspec":{"display_name":"designerbasetools_venv","language":"python","name":"designerbasetools_venv"},"language_info":{"codemirror_mode":{"name":"ipython","version":3},"file_extension":".py","mimetype":"text/x-python","name":"python","nbconvert_exporter":"python","pygments_lexer":"ipython3","version":"3.8.5"}},"nbformat":4,"nbformat_minor":2}]]></Notebook>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxJupyterPluginEngine.dll" EngineDllEntryPoint="AlteryxJupyter" />
+    </Node>
+  </Nodes>
+  <Connections />
+  <Properties>
+    <Memory default="True" />
+    <GlobalRecordLimit value="0" />
+    <TempFiles default="True" />
+    <Annotation on="True" includeToolName="False" />
+    <ConvErrorLimit value="10" />
+    <ConvErrorLimit_Stop value="False" />
+    <CancelOnError value="False" />
+    <DisableBrowse value="False" />
+    <EnablePerformanceProfiling value="False" />
+    <PredictiveToolsCodePage value="1252" />
+    <DisableAllOutput value="False" />
+    <ShowAllMacroMessages value="False" />
+    <ShowConnectionStatusIsOn value="True" />
+    <ShowConnectionStatusOnlyWhenRunning value="True" />
+    <ZoomLevel value="0" />
+    <LayoutType>Horizontal</LayoutType>
+    <MetaInfo>
+      <NameIsFileName value="True" />
+      <Name>Workaround</Name>
+      <Description />
+      <RootToolName />
+      <ToolVersion />
+      <ToolInDb value="False" />
+      <CategoryName />
+      <SearchTags />
+      <Author />
+      <Company />
+      <Copyright />
+      <DescriptionLink actual="" displayed="" />
+      <Example>
+        <Description />
+        <File />
+      </Example>
+      <WorkflowId value="43ff8001-0d4c-4f95-a8ae-3121b08f56cd" />
+      <Telemetry>
+        <PreviousWorkflowId value="18cf9e8a-806b-4f53-9871-6782597388da" />
+        <OriginWorkflowId value="43ff8001-0d4c-4f95-a8ae-3121b08f56cd" />
+      </Telemetry>
+    </MetaInfo>
+    <Events>
+      <Enabled value="True" />
+    </Events>
+  </Properties>
+</AlteryxDocument>
